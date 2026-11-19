@@ -10,7 +10,8 @@
  *   scorrono sotto il mezzo fanno capire la velocità;
  * - una rampa per provare salti e atterraggi;
  * - qualche scatola di cartone da spingere, per provare gli urti;
- * - il veicolo e la telecamera che lo insegue;
+ * - il veicolo, la telecamera che lo insegue e una luce di riempimento che
+ *   accompagna la telecamera (il retro del mezzo non resta mai in ombra);
  * - fuori dal Canvas, un riquadro con i comandi e il tachimetro.
  *
  * Non importa niente da datiCitta.ts: la città non viene generata.
@@ -21,6 +22,7 @@ import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier"
 import type { Group } from "three"
 
 import Palcoscenico from "../Palcoscenico"
+import LuceRiempimento from "./LuceRiempimento"
 import TelecameraInseguimento from "./TelecameraInseguimento"
 import Veicolo from "./Veicolo"
 import { GRAVITA, SCALA } from "./parametri"
@@ -150,6 +152,8 @@ function ScenaProvaGuida() {
 
             {/* Dopo il veicolo e dentro Physics: segue la posizione già aggiornata */}
             <TelecameraInseguimento seguitoRef={seguito} />
+            {/* Dopo la telecamera: la luce parte da dove la telecamera è appena arrivata */}
+            <LuceRiempimento seguitoRef={seguito} />
           </Physics>
         </Suspense>
       </Palcoscenico>

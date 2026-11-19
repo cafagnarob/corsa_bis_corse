@@ -99,6 +99,7 @@ function preparaModello(scena: Object3D, clip: AnimationClip[]): ModelloPronto {
 function regolaMateriale(m: Material): Material {
   const copia = m.clone() as MeshStandardMaterial
   copia.emissiveIntensity = INTENSITA_LUCI
+  copia.color.set("#e05a3a") // il colore moltiplica la texture
   if (copia.map) copia.map.anisotropy = ANISOTROPIA
   return copia
 }
