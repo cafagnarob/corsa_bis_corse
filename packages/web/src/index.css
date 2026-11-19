@@ -1,0 +1,21 @@
+/*
+ * index.css
+ * Stili globali dell'app Corsa Bis.
+ * Fa occupare alla scena 3D tutta la finestra del browser:
+ * html, body e il contenitore #root riempiono lo schermo,
+ * senza margini né barre di scorrimento.
+ */
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  background: #2e4643; /* panno del tavolo, colore provvisorio */
+}

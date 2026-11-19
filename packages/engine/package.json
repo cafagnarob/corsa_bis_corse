@@ -1,0 +1,17 @@
+{
+  "name": "@corsa-bis/engine",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Motore di simulazione di Corsa Bis: TypeScript puro, senza grafica",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^5.1.0"
+  }
+}

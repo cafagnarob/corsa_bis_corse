@@ -1,0 +1,54 @@
+# =====================================================
+# .gitignore di Corsa Bis
+# File e cartelle che Git deve ignorare: dipendenze,
+# build, file temporanei di Blender, editor e sistema.
+# =====================================================
+
+# --- Node / frontend ---
+# dipendenze npm, si reinstallano con npm install
+node_modules/          
+# build di produzione generate da Vite
+dist/                  
+# cache di Vite
+.vite/                 
+# log di npm e degli strumenti
+*.log                  
+npm-debug.log*
+
+# --- Variabili d'ambiente (mai su GitHub: possono contenere chiavi) ---
+.env
+.env.*
+# l'esempio senza valori segreti invece si versiona
+!.env.example          
+
+# --- Backend Java / Spring Boot (Fase 4) ---
+# build di Maven
+backend/target/        
+# build di Gradle
+backend/build/         
+*.class
+
+# --- Blender ---
+# backup automatici di Blender
+*.blend1               
+*.blend2
+# cache di Python degli script
+__pycache__/           
+*.pyc
+
+# --- Editor e IDE ---
+.vscode/*
+!.vscode/settings.json # le impostazioni condivise del progetto si versionano
+!.vscode/extensions.json
+.idea/
+
+# --- Sistema operativo ---
+# macOS
+.DS_Store              
+# Windows
+Thumbs.db              
+desktop.ini
+
+
+# File .blend di lavoro: rigenerabili dagli script in blender/scripts
+blender/files/

@@ -1,0 +1,107 @@
+{
+ "immagine": "facciate_industria_colore.jpg",
+ "maschera": "facciate_industria_maschera.jpg",
+ "pixel_per_metro": 128,
+ "nota": "u cresce verso destra guardando la facciata; maschera bianca = intonaco da tingere",
+ "celle": {
+  "Cap_Parete": {
+   "uv": [
+    0.0,
+    0.0,
+    0.125,
+    0.25
+   ],
+   "larghezza_m": 2.0,
+   "altezza_m": 4.0,
+   "riga": "ind_terra"
+  },
+  "Cap_Porta": {
+   "uv": [
+    0.125,
+    0.0,
+    0.25,
+    0.25
+   ],
+   "larghezza_m": 2.0,
+   "altezza_m": 4.0,
+   "riga": "ind_terra"
+  },
+  "Cap_Portone": {
+   "uv": [
+    0.25,
+    0.0,
+    0.5,
+    0.25
+   ],
+   "larghezza_m": 4.0,
+   "altezza_m": 4.0,
+   "riga": "ind_terra"
+  },
+  "Cap_Parete_Alta": {
+   "uv": [
+    0.0,
+    0.25,
+    0.125,
+    0.4375
+   ],
+   "larghezza_m": 2.0,
+   "altezza_m": 3.0,
+   "riga": "ind_alto"
+  },
+  "Cap_Finestrata": {
+   "uv": [
+    0.125,
+    0.25,
+    0.25,
+    0.4375
+   ],
+   "larghezza_m": 2.0,
+   "altezza_m": 3.0,
+   "riga": "ind_alto"
+  },
+  "Gr_Nastro": {
+   "uv": [
+    0.0,
+    0.4375,
+    0.125,
+    0.625
+   ],
+   "larghezza_m": 2.0,
+   "altezza_m": 3.0,
+   "riga": "gr_piano"
+  },
+  "Gr_Vetrata": {
+   "uv": [
+    0.125,
+    0.4375,
+    0.25,
+    0.625
+   ],
+   "larghezza_m": 2.0,
+   "altezza_m": 3.0,
+   "riga": "gr_piano"
+  },
+  "Gr_Terra_Vetrata": {
+   "uv": [
+    0.0,
+    0.625,
+    0.125,
+    0.875
+   ],
+   "larghezza_m": 2.0,
+   "altezza_m": 4.0,
+   "riga": "gr_terra"
+  },
+  "Gr_Coronamento": {
+   "uv": [
+    0.0,
+    0.875,
+    0.125,
+    0.945
+   ],
+   "larghezza_m": 2.0,
+   "altezza_m": 1.12,
+   "riga": "gr_fasce"
+  }
+ }
+}
