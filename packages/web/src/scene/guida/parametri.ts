@@ -45,9 +45,11 @@ export type ParametriVeicolo = {
 
   readonly ruote: {
     readonly raggio: number
-    /** Distanza tra asse anteriore e posteriore. */
-    readonly passo: number
-    /** Distanza tra le ruote destra e sinistra. */
+    /** Posizione x dell'asse anteriore (positiva, davanti al centro). */
+    readonly asseAnteriore: number
+    /** Posizione x dell'asse posteriore (negativa, dietro al centro). */
+    readonly assePosteriore: number
+    /** Distanza tra i centri delle ruote destra e sinistra. */
     readonly carreggiata: number
     /** Quota dell'attacco delle sospensioni rispetto al centro della scocca. */
     readonly attacco: number
@@ -91,7 +93,8 @@ export type ParametriVeicolo = {
 
 /* ------------------------------------------------------------------------
  * Utilitaria (classe Leggeri)
- * Misure dal modello di Blender (3,61 × 1,62 × 1,51 m, ruote r 0,30 m).
+ * Misure dal modello di Blender (utilitaria.glb: 3,6 × 1,62 × 1,5 m,
+ * ruote r 0,30 m; assi e carreggiata letti dalle ossa del rig).
  * Agile e svelta a partire, non velocissima. Trazione posteriore: con il
  * freno a mano il retro scivola volentieri, come vuole una guida arcade.
  *
@@ -112,8 +115,9 @@ export const UTILITARIA: ParametriVeicolo = {
   massa: 850,
   ruote: {
     raggio: 0.3,
-    passo: 2.3,
-    carreggiata: 1.4,
+    asseAnteriore: 1.2, // dalle ossa Sterzo_Ant del modello
+    assePosteriore: -1.15, // dalle ossa Ruota_Post
+    carreggiata: 1.24, // ruote a ±0,62 m
     attacco: -0.25,
   },
   sospensioni: {

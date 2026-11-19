@@ -1,9 +1,9 @@
 /*
  * Veicolo.tsx
  * Il mezzo guidato dal giocatore: corpo rigido di Rapier, controller a raggi
- * sulle ruote e, per ora, un modellino provvisorio fatto di scatole (scocca,
- * abitacolo e quattro ruote). Il modello di cartone di Blender arriverà con
- * ModelloVeicolo.tsx.
+ * sulle ruote e il modello di cartone (ModelloVeicolo.tsx). Finché il
+ * modello non è caricato si vede il modellino di scatole
+ * (ModellinoProvvisorio.tsx).
  *
  * Come funziona:
  * 1. La scocca è un RigidBody dinamico con una scatola come collisore. Il
@@ -14,8 +14,9 @@
  * 3. Prima di ogni passo fisico (useBeforePhysicsStep) si leggono i comandi,
  *    si rende graduale lo sterzo, si calcola cosa fa ogni ruota con le
  *    regole di guidaArcade.ts e si passa tutto al controller.
- * 4. A ogni fotogramma (useFrame) si posizionano le ruote disegnate:
- *    altezza della sospensione, angolo di sterzo e rotazione.
+ * 4. Il disegno legge il controller da solo (controllerRef): modello e
+ *    modellino mettono ruote, sterzo e altezza dove dice la fisica.
+ *    Qui a ogni fotogramma resta solo il tachimetro.
  *
  * Due ref arrivano da fuori: `seguitoRef` (il gruppo che la telecamera
  * insegue) e `tachimetroRef` (un elemento HTML dove scrivere i km/h).
@@ -24,7 +25,7 @@
  * disegno del componente; con un altro nome segnala un errore.
  */
 
-import { useEffect, useRef, type RefObject } from "react"
+import { Suspense, useEffect, useRef, type RefObject } from "react"
 import { useFrame } from "@react-three/fiber"
 import {
   CuboidCollider,
@@ -38,6 +39,8 @@ import type { DynamicRayCastVehicleController } from "@dimforge/rapier3d-compat"
 
 import { sterzoGraduale } from "./comandi"
 import { calcolaGuida, ruoteVeicolo } from "./guidaArcade"
+import ModellinoProvvisorio from "./ModellinoProvvisorio"
+import ModelloVeicolo from "./ModelloVeicolo"
 import {
   SCALA,
   UTILITARIA,
@@ -68,8 +71,7 @@ function Veicolo({
   const { world } = useRapier()
   const comandi = useComandi()
   const corpo = useRef<RapierRigidBody>(null)
-  const controller = useRef<DynamicRayCastVehicleController | null>(null)
-  const ruoteDisegnate = useRef<(Group | null)[]>([])
+  const controllerRef = useRef<DynamicRayCastVehicleController | null>(null)
   // Stato che cambia a ogni passo: in un ref, mai nello stato React
   const stato = useRef({
     sterzo: 0,
@@ -84,7 +86,6 @@ function Veicolo({
     altezza: (p.scocca.altezza / 2) * SCALA,
     larghezza: (p.scocca.larghezza / 2) * SCALA,
   }
-  const raggio = p.ruote.raggio * SCALA
 
   /*
    * Creazione del controller: serve il corpo rigido già nel mondo, quindi
@@ -113,16 +114,16 @@ function Veicolo({
       c.setWheelMaxSuspensionForce(i, 1e9) // nessun limite: decide la rigidezza
       c.setWheelFrictionSlip(i, p.aderenza.presa)
     }
-    controller.current = c
+    controllerRef.current = c
     return () => {
       world.removeVehicleController(c)
-      controller.current = null
+      controllerRef.current = null
     }
   }, [world, p])
 
   /* Prima di ogni passo fisico: dai comandi alle ruote. */
   useBeforePhysicsStep((mondo) => {
-    const c = controller.current
+    const c = controllerRef.current
     const scocca = corpo.current
     if (!c || !scocca) return
     const dt = mondo.timestep
@@ -158,22 +159,10 @@ function Veicolo({
     c.updateVehicle(dt)
   })
 
-  /* A ogni fotogramma: ruote disegnate e tachimetro. */
+  /* A ogni fotogramma: il tachimetro. */
   useFrame((_, delta) => {
-    const c = controller.current
+    const c = controllerRef.current
     if (!c) return
-
-    ruoteDisegnate.current.forEach((ruota, i) => {
-      if (!ruota) return
-      const [x, y, z] = ruote[i].attacco
-      const sospensione =
-        c.wheelSuspensionLength(i) ?? p.sospensioni.riposo * SCALA
-      ruota.position.set(x, y - sospensione, z)
-      ruota.rotation.y = c.wheelSteering(i) ?? 0
-      // Il cerchione (primo figlio) gira attorno al suo asse; avanti = verso negativo
-      const cerchione = ruota.children[0]
-      if (cerchione) cerchione.rotation.z = -(c.wheelRotation(i) ?? 0)
-    })
 
     const s = stato.current
     s.tempoTachimetro += delta
@@ -206,49 +195,14 @@ function Veicolo({
       />
 
       <group ref={seguitoRef}>
-        {/*
-          Modellino provvisorio: scocca arancio, abitacolo crema.
-          La scocca disegnata è più stretta della carreggiata, così le ruote
-          sporgono e si vedono girare (il collisore resta largo quanto il mezzo).
-        */}
-        <mesh>
-          <boxGeometry
-            args={[
-              2 * meta.lunghezza,
-              2 * meta.altezza,
-              (p.ruote.carreggiata - 0.3) * SCALA,
-            ]}
-          />
-          <meshStandardMaterial color="#d9772b" />
-        </mesh>
-        <mesh position={[-0.2 * SCALA, meta.altezza + 0.25 * SCALA, 0]}>
-          <boxGeometry args={[1.8 * SCALA, 0.5 * SCALA, 1.4 * SCALA]} />
-          <meshStandardMaterial color="#efe3c8" />
-        </mesh>
-
-        {ruote.map((_, i) => (
-          <group
-            key={i}
-            ref={(g) => {
-              ruoteDisegnate.current[i] = g
-            }}
-          >
-            {/* Il cilindro nasce in piedi (asse Y): lo giriamo sull'asse Z */}
-            <group>
-              <mesh rotation={[Math.PI / 2, 0, 0]}>
-                <cylinderGeometry args={[raggio, raggio, 0.2 * SCALA, 16]} />
-                <meshStandardMaterial color="#3a3a3a" />
-              </mesh>
-              {/* Una razza chiara: senza, la ruota sembrerebbe ferma */}
-              <mesh position={[0, 0, 0]}>
-                <boxGeometry
-                  args={[raggio * 1.6, raggio * 0.25, 0.22 * SCALA]}
-                />
-                <meshStandardMaterial color="#efe3c8" />
-              </mesh>
-            </group>
-          </group>
-        ))}
+        {/* Il modello di cartone; finché non è caricato, le scatole */}
+        <Suspense
+          fallback={
+            <ModellinoProvvisorio parametri={p} controllerRef={controllerRef} />
+          }
+        >
+          <ModelloVeicolo parametri={p} controllerRef={controllerRef} />
+        </Suspense>
       </group>
     </RigidBody>
   )

@@ -38,14 +38,15 @@ export type Ruota = {
 
 /** Le quattro ruote del mezzo, nell'ordine fisso, in unità di gioco. */
 export function ruoteVeicolo(p: ParametriVeicolo): readonly Ruota[] {
-  const x = (p.ruote.passo / 2) * SCALA // davanti +X
+  const davanti = p.ruote.asseAnteriore * SCALA // +X
+  const dietro = p.ruote.assePosteriore * SCALA
   const z = (p.ruote.carreggiata / 2) * SCALA // destra +Z
   const y = p.ruote.attacco * SCALA
   return [
-    { attacco: [x, y, -z], anteriore: true },
-    { attacco: [x, y, z], anteriore: true },
-    { attacco: [-x, y, -z], anteriore: false },
-    { attacco: [-x, y, z], anteriore: false },
+    { attacco: [davanti, y, -z], anteriore: true },
+    { attacco: [davanti, y, z], anteriore: true },
+    { attacco: [dietro, y, -z], anteriore: false },
+    { attacco: [dietro, y, z], anteriore: false },
   ]
 }
 
