@@ -37,9 +37,13 @@ import type { GruppiCitta } from "./raggruppa"
 const KIT_ACCESO =
   new URLSearchParams(window.location.search).get("kit") !== "0"
 
-type CittaIstanziataProps = { gruppi: GruppiCitta }
+type CittaIstanziataProps = {
+  gruppi: GruppiCitta
+  /** Il kit a piedi: false alla guida, dove a ogni spostamento costerebbe un rimontaggio (GDD, "kit solo a piedi"). */
+  kit?: boolean
+}
 
-function CittaIstanziata({ gruppi }: CittaIstanziataProps) {
+function CittaIstanziata({ gruppi, kit = true }: CittaIstanziataProps) {
   const materiali = useMaterialiTessere()
   // quali edifici sono montati col kit: lo decide KitEdifici, lo usano i gusci per nascondere le facciate
   const montati = useMemo(() => creaMontati(gruppi.edifici.length), [gruppi])
@@ -54,7 +58,7 @@ function CittaIstanziata({ gruppi }: CittaIstanziataProps) {
         <Edifici gruppi={gruppi} montati={montati} />
       </Suspense>
       {/* a parte: il kit (glb e texture) arriva dopo i gusci e non li fa aspettare */}
-      {KIT_ACCESO && (
+      {KIT_ACCESO && kit && (
         <Suspense fallback={null}>
           <KitEdifici edifici={gruppi.edifici} montati={montati} />
         </Suspense>

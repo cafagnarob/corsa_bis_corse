@@ -80,6 +80,10 @@ function Palcoscenico({
     <>
       <ErroreScena>
         <Canvas
+          // risoluzione: al massimo 1,5 pixel veri per pixel CSS. Sugli
+          // schermi ad alta densità (2× o più) i pixel da colorare sarebbero
+          // quasi il doppio, per una differenza che a schermo quasi non si vede.
+          dpr={[1, 1.5]}
           // Neutral: i colori arrivano a schermo come li abbiamo scelti
           // (il predefinito, ACES Filmic, li scurisce e li desatura).
           gl={{ toneMapping: NeutralToneMapping }}

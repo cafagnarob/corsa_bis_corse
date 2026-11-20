@@ -8,6 +8,10 @@
  * (ScenaGara): cambiano solo le tessere e la partenza, che arrivano da fuori.
  * `children` sono le cose in più del campo (per esempio la linea del giro).
  *
+ * Alla guida il kit degli edifici a piedi resta spento: si passa davanti
+ * alle case troppo in fretta, e rimontarlo ogni pochi metri faceva scattare
+ * il gioco. Bastano i gusci.
+ *
  * Va messo dentro <Physics> e dentro un <Suspense> (modelli e texture della
  * città si caricano).
  */
@@ -51,8 +55,8 @@ function CampoCitta({
 }: CampoCittaProps) {
   return (
     <>
-      {/* Il disegno delle tessere, come nella città */}
-      <CittaIstanziata gruppi={gruppi} />
+      {/* Il disegno delle tessere, come nella città, senza il kit a piedi */}
+      <CittaIstanziata gruppi={gruppi} kit={false} />
 
       {/* La fisica delle tessere: forme invisibili */}
       <RigidBody type="fixed" colliders={false}>

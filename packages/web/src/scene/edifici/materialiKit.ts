@@ -102,15 +102,24 @@ function materialeTenda(maschera: Texture) {
   return m
 }
 
+/*
+ * Attenzione: drei richiama la funzione passata a useTexture ogni volta che
+ * cambia (useLayoutEffect con la funzione tra le dipendenze). Scritta dentro
+ * l'hook sarebbe una funzione nuova a ogni disegno del componente: le
+ * texture tornerebbero needsUpdate e si ricaricherebbero sulla scheda video
+ * (immagini 2048 × 2048, un fermo di decimi di secondo). Per questo sta
+ * fuori, definita una volta sola.
+ */
+const PERCORSI = NOMI.map((n) => FILE[n])
+const preparaTutte = (tutte: Texture[]) =>
+  tutte.forEach((t, i) => prepara(t, NOMI[i]))
+
 /**
  * I materiali veri per nome di segnaposto; `null` = si tiene quello del glb.
  * È un hook perché carica le texture (Suspense).
  */
 export function useMaterialiKit(): (segnaposto: Material) => Material {
-  const lette = useTexture(
-    NOMI.map((n) => FILE[n]),
-    (tutte) => tutte.forEach((t, i) => prepara(t, NOMI[i])),
-  )
+  const lette = useTexture(PERCORSI, preparaTutte)
   return useMemo(() => {
     const t = Object.fromEntries(NOMI.map((n, i) => [n, lette[i]])) as Record<
       NomeFile,

@@ -57,13 +57,22 @@ function prepara(t: Texture, colore: boolean, bordo: boolean) {
   t.needsUpdate = true
 }
 
+/*
+ * Attenzione: drei richiama la funzione passata a useTexture ogni volta che
+ * cambia (useLayoutEffect con la funzione tra le dipendenze). Scritta dentro
+ * l'hook sarebbe una funzione nuova a ogni disegno del componente: le
+ * texture tornerebbero needsUpdate e si ricaricherebbero sulla scheda video
+ * (immagini 2048 × 2048, un fermo di decimi di secondo). Per questo sta
+ * fuori, definita una volta sola.
+ */
+const preparaTutte = (tutte: Texture[]) =>
+  tutte.forEach((t, i) =>
+    prepara(t, i % 2 === 0, NOMI[Math.floor(i / 2)] === "bordo_ondulato"),
+  )
+
 /** Tutte le texture delle tessere. È un hook perché carica le immagini (Suspense). */
 export function useTextureTessere(): TextureTessere {
-  const lette = useTexture(PERCORSI, (tutte) =>
-    tutte.forEach((t, i) =>
-      prepara(t, i % 2 === 0, NOMI[Math.floor(i / 2)] === "bordo_ondulato"),
-    ),
-  )
+  const lette = useTexture(PERCORSI, preparaTutte)
   const coppia = (i: number): CoppiaTexture => ({
     colore: lette[2 * i],
     normale: lette[2 * i + 1],
