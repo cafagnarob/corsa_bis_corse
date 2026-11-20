@@ -52,6 +52,8 @@ import { useComandi } from "./useComandi"
 type VeicoloProps = {
   /** Dove nasce il mezzo, e dove torna con il ripristino (unità di gioco). */
   readonly partenza: readonly [number, number, number]
+  /** Dove guarda alla partenza: angolo attorno a Y in radianti (0 = verso +X). */
+  readonly direzione?: number
   readonly parametri?: ParametriVeicolo
   /** Gruppo che la telecamera insegue: segue la posizione disegnata (interpolata). */
   readonly seguitoRef?: RefObject<Group | null>
@@ -64,6 +66,7 @@ const INTERVALLO_TACHIMETRO = 0.1
 
 function Veicolo({
   partenza,
+  direzione = 0,
   parametri: p = UTILITARIA,
   seguitoRef,
   tachimetroRef,
@@ -136,7 +139,11 @@ function Veicolo({
         { x: partenza[0], y: partenza[1], z: partenza[2] },
         true,
       )
-      scocca.setRotation({ x: 0, y: 0, z: 0, w: 1 }, true)
+      // Rotazione di `direzione` attorno a Y, come quaternione (asse × seno della metà)
+      scocca.setRotation(
+        { x: 0, y: Math.sin(direzione / 2), z: 0, w: Math.cos(direzione / 2) },
+        true,
+      )
       scocca.setLinvel({ x: 0, y: 0, z: 0 }, true)
       scocca.setAngvel({ x: 0, y: 0, z: 0 }, true)
     }
@@ -176,6 +183,7 @@ function Veicolo({
     <RigidBody
       ref={corpo}
       position={[...partenza]}
+      rotation={[0, direzione, 0]}
       colliders={false}
       canSleep={false} // un mezzo addormentato non risponde più ai comandi
       angularDamping={0.5}

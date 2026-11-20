@@ -14,8 +14,14 @@
  * destra +Z. L'origine è al centro della scocca.
  */
 
-/** Unità di gioco per metro reale (scala grafica del GDD). */
-export const SCALA = 5.2
+import { SCALA } from "@corsa-bis/engine"
+
+/**
+ * Unità di gioco per metro reale (scala grafica del GDD). Sta nel motore
+ * (scala.ts) perché serve anche alle regole, per esempio alla lunghezza dei
+ * circuiti; qui si riesporta per chi la cerca tra i parametri della guida.
+ */
+export { SCALA }
 
 /** Accelerazione di gravità in unità di gioco al secondo quadrato. */
 export const GRAVITA = 9.81 * SCALA

@@ -111,16 +111,21 @@ export const REGOLE_STRADE = {
   probabilitaRotondaResidenziale: 0.5,
 } as const
 
-/** Probabilità di un collegamento in più (anello) secondo il tipo: denso = più incroci. */
+/**
+ * Probabilità di un collegamento in più (anello) secondo il tipo: denso =
+ * più incroci. Raddoppiate il 20 novembre per il gioco di corse: con i
+ * valori del gestionale la rete era quasi un albero (Kruskal più pochi
+ * anelli) e i circuiti chiusi si trovavano in metà delle città.
+ */
 const PROBABILITA_ANELLO: Record<TipoTessera, number> = {
-  centro_storico: 0.6,
-  uffici_commercio: 0.5,
-  popolare: 0.4,
-  nuove_costruzioni: 0.35,
-  industriale: 0.3,
-  villette: 0.25,
-  parco: 0.15,
-  strada: 0.05,
+  centro_storico: 0.95,
+  uffici_commercio: 0.95,
+  popolare: 0.8,
+  nuove_costruzioni: 0.7,
+  industriale: 0.6,
+  villette: 0.5,
+  parco: 0.3,
+  strada: 0.1,
 }
 
 /** Risultato dell'incontro di due classi sullo stesso lato. */
