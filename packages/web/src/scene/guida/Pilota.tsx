@@ -1,7 +1,8 @@
 /*
  * Pilota.tsx
  * Tutto quello che serve al giocatore per guidare, uguale in ogni campo:
- * il veicolo, la telecamera che lo insegue e la luce di riempimento.
+ * il veicolo, la telecamera che lo insegue, la luce di riempimento e il
+ * punto guardato (il dettaglio della città segue il mezzo).
  *
  * I tre componenti condividono un ref, il gruppo disegnato del mezzo: il
  * veicolo lo riempie, telecamera e luce lo seguono. L'ordine conta: prima il
@@ -14,8 +15,10 @@ import type { Group } from "three"
 
 import type { Partenza } from "./campi"
 import LuceRiempimento from "./LuceRiempimento"
+
 import TelecameraInseguimento from "./TelecameraInseguimento"
 import Veicolo from "./Veicolo"
+import PuntoGuardato from "./PuntoGuardato"
 
 type PilotaProps = {
   readonly partenza: Partenza
@@ -36,6 +39,7 @@ function Pilota({ partenza, tachimetroRef }: PilotaProps) {
       />
       <TelecameraInseguimento seguitoRef={seguitoRef} />
       <LuceRiempimento seguitoRef={seguitoRef} />
+      <PuntoGuardato seguitoRef={seguitoRef} />
     </>
   )
 }

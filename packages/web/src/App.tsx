@@ -5,6 +5,7 @@
  *
  *   /                  la città intera (ScenaCitta)
  *   /?scena=guida      la scena di prova della guida (ScenaProvaGuida)
+ *   /?scena=gara       la gara sul circuito della città (ScenaGara)
  *   /?seme=barletta    la città generata da un altro seme
  *
  * Le scene sono caricate con lazy(): il file di una scena viene scaricato ed
@@ -17,11 +18,13 @@ import { lazy, Suspense } from "react"
 
 const ScenaCitta = lazy(() => import("./scene/citta/ScenaCitta"))
 const ScenaProvaGuida = lazy(() => import("./scene/guida/ScenaProvaGuida"))
+const ScenaGara = lazy(() => import("./scene/gara/ScenaGara"))
 
 /** Le scene disponibili, per nome nell'indirizzo. */
 const SCENE = {
   citta: ScenaCitta,
   guida: ScenaProvaGuida,
+  gara: ScenaGara,
 } as const
 
 type NomeScena = keyof typeof SCENE
